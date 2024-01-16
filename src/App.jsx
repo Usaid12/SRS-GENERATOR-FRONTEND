@@ -1,9 +1,10 @@
+import Form from "./components/Form"
 
 function App() {
 
   return (
     <>
-      <div>SRS GENERATOR</div>
+      <Form/>
     </>
   )
 }
