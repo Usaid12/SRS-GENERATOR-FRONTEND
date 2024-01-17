@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 const PageContainer = styled.div`
   display: flex;
@@ -70,15 +72,11 @@ export const StyledButton = styled.button`
 const Form = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-
-
     const navigate = useNavigate()
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://127.0.0.1:5000/api/generate", {
+            const response = await axios.post("http://localhost:5000/api/generate", {
                 name: name,
                 description: description,
             });
@@ -116,6 +114,7 @@ const Form = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
+
                     />
                     <StyledTextArea
                         placeholder="Description"
