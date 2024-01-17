@@ -81,19 +81,19 @@ const Form = () => {
                 description: description,
             });
 
-            const id=response.data.data.id
+            const id = response.data.data.id
             console.log(response.data);
             if (response.status === 201) {
                 toast.success('Form submitted successfully!', {
                     position: 'top-right',
                     autoClose: 2000,
                 });
-        
+
                 setTimeout(() => {
-                    navigate('/download-srs',{ state: { id: id} });
+                    navigate('/download-srs', { state: { id: id } });
                 }, 2000);
             }
-                else {
+            else {
                 console.error('Server error:', response.status);
                 // Handle other statuses as needed
             }
@@ -120,7 +120,7 @@ const Form = () => {
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        rows="5" 
+                        rows="5"
                         required
                     />
                     <StyledButton type="submit">Submit</StyledButton>
