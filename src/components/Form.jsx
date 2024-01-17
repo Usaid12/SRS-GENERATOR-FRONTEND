@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import axios from "axios"
-import DownloadSrs from './DownloadSrs';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PageContainer = styled.div`
   display: flex;
@@ -21,7 +23,7 @@ const StyledForm = styled.form`
   margin-bottom:110px
 `;
 
-const FormTitle = styled.h1`
+const Formname = styled.h1`
   font-size: 24px;
   margin-bottom: 20px;
   color: #333;
@@ -65,60 +67,72 @@ export const StyledButton = styled.button`
 
 
 
-const FormComponent = () => {
-    const [title, setTitle] = useState('');
+const Form = () => {
+    const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [id,setId]=useState(null)
 
+
+    const navigate = useNavigate()
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const response = await axios.post("http://127.0.0.1:5000/api/generate", {
-            title: title,
-            description: description,
-          });
-            setId(response.data.id)
-          console.log(response.data);
-    
-            if (response.status >= 200 && response.status < 300) {
-                <DownloadSrs id={id} />
-          } else {
-            console.error('Server error:', response.status);
-            // Handle other statuses as needed
-          }
+            const response = await axios.post("http://127.0.0.1:5000/api/generate", {
+                name: name,
+                description: description,
+            });
+
+            const id=response.data.data.id
+            console.log(response.data);
+            if (response.status === 201) {
+                toast.success('Form submitted successfully!', {
+                    position: 'top-right',
+                    autoClose: 2000,
+                });
+        
+                setTimeout(() => {
+                    navigate('/download-srs',{ state: { id: id} });
+                }, 2000);
+            }
+                else {
+                console.error('Server error:', response.status);
+                // Handle other statuses as needed
+            }
         } catch (error) {
-          console.error('Error submitting form:', error);
+            console.error('Error submitting form:', error);
         }
-      };
-    
+    };
+
     return (
         <>
             <StyledHeading>SRS GENERATOR</StyledHeading>
             <PageContainer>
                 <StyledForm onSubmit={handleSubmit}>
-                    <FormTitle>ENTER DETAILS TO GENERATE SRS</FormTitle>
+                    <Formname>ENTER DETAILS TO GENERATE SRS</Formname>
                     <StyledInput
                         type="text"
-                        placeholder="Title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         required
                     />
                     <StyledTextArea
                         placeholder="Description"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        rows="4" // Adjust the number of rows as needed
+                        rows="5" 
                         required
                     />
                     <StyledButton type="submit">Submit</StyledButton>
 
                 </StyledForm>
             </PageContainer>
+            <ToastContainer position="top-right" />
+
+
         </>
     );
 };
 
-export default FormComponent;
+export default Form;
